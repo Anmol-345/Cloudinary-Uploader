@@ -1,65 +1,163 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
+  const [cloudName, setCloudName] = useState("");
+  const [preset, setPreset] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !cloudName || !preset) return;
+
+    setLoading(true);
+    setCopied(false);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", preset);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      setImageUrl(data.secure_url || "");
+    } catch (err) {
+      console.error(err);
+      setImageUrl("");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyUrl = async () => {
+    await navigator.clipboard.writeText(imageUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const clearAll = () => {
+    setCloudName("");
+    setPreset("");
+    setImageUrl("");
+    setCopied(false);
+    setLoading(false);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Cloudinary Image Upload
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-sm text-gray-500">
+            Upload images and instantly get a hosted URL
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* LEFT — Controls */}
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder="Cloud Name"
+              value={cloudName}
+              onChange={(e) => setCloudName(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2
+                         text-black placeholder:text-gray-400
+                         focus:ring-2 focus:ring-blue-500"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+            <input
+              type="text"
+              placeholder="Upload Preset"
+              value={preset}
+              onChange={(e) => setPreset(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2
+                         text-black placeholder:text-gray-400
+                         focus:ring-2 focus:ring-blue-500"
+            />
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={uploadImage}
+              className="block w-full text-sm text-black
+                file:mr-4 file:rounded-md file:border-0
+                file:bg-blue-600 file:px-4 file:py-2
+                file:text-white hover:file:bg-blue-700"
+            />
+
+            {loading && (
+              <p className="text-sm text-blue-600">Uploading image…</p>
+            )}
+
+            {imageUrl && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Image URL
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={imageUrl}
+                    readOnly
+                    className="flex-1 rounded-md border border-gray-300 px-3 py-2
+                               text-black bg-gray-50 text-sm"
+                  />
+                  <button
+                    onClick={copyUrl}
+                    className="rounded-md bg-gray-900 px-4 py-2
+                               text-sm text-white hover:bg-black"
+                  >
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={clearAll}
+                className="rounded-md border border-gray-300 px-4 py-2
+                           text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+
+          {/* RIGHT — Preview */}
+          <div className="border rounded-lg bg-gray-50 flex items-center justify-center p-4">
+            {!imageUrl && (
+              <p className="text-sm text-gray-400">
+                Image preview will appear here
+              </p>
+            )}
+
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Uploaded preview"
+                className="max-h-[400px] w-full object-contain rounded-md"
+              />
+            )}
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
