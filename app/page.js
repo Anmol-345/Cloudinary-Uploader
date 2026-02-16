@@ -46,88 +46,90 @@ export default function Home() {
   };
 
   const clearAll = () => {
+    setCloudName("");
+    setPreset("");
     setImageUrl("");
     setCopied(false);
     setLoading(false);
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Cloudinary Image Upload
-          </h1>
-          <p className="text-sm text-gray-500">
-            Upload images and instantly get a hosted URL
-          </p>
-        </div>
+    <main className="min-h-screen bg-gray-100 flex flex-col">
+      {/* Content */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Cloudinary Image Upload
+            </h1>
+            <p className="text-sm text-gray-500">
+              Upload images and instantly get a hosted URL
+            </p>
+          </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* LEFT — Controls */}
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Cloud Name"
-              value={cloudName}
-              onChange={(e) => setCloudName(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2
-                         text-black placeholder:text-gray-400
-                         focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* LEFT */}
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Cloud Name"
+                value={cloudName}
+                onChange={(e) => setCloudName(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2
+                           text-black placeholder:text-gray-400
+                           focus:ring-2 focus:ring-blue-500"
+              />
 
-            <input
-              type="text"
-              placeholder="Upload Preset"
-              value={preset}
-              onChange={(e) => setPreset(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2
-                         text-black placeholder:text-gray-400
-                         focus:ring-2 focus:ring-blue-500"
-            />
+              <input
+                type="text"
+                placeholder="Upload Preset"
+                value={preset}
+                onChange={(e) => setPreset(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2
+                           text-black placeholder:text-gray-400
+                           focus:ring-2 focus:ring-blue-500"
+              />
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={uploadImage}
-              className="block w-full text-sm text-black
-                file:mr-4 file:rounded-md file:border-0
-                file:bg-blue-600 file:px-4 file:py-2
-                file:text-white hover:file:bg-blue-700"
-            />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={uploadImage}
+                className="block w-full text-sm text-black
+                  file:mr-4 file:rounded-md file:border-0
+                  file:bg-blue-600 file:px-4 file:py-2
+                  file:text-white hover:file:bg-blue-700"
+              />
 
-            {loading && (
-              <p className="text-sm text-blue-600">Uploading image…</p>
-            )}
+              {loading && (
+                <p className="text-sm text-blue-600">Uploading image…</p>
+              )}
 
-            {imageUrl && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Image URL
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={imageUrl}
-                    readOnly
-                    className="flex-1 rounded-md border border-gray-300 px-3 py-2
-                               text-black bg-gray-50 text-sm"
-                  />
-                  <button
-                    onClick={copyUrl}
-                    className="rounded-md bg-gray-900 px-4 py-2
-                               text-sm text-white hover:bg-black"
-                  >
-                    {copied ? "Copied" : "Copy"}
-                  </button>
+              {imageUrl && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Image URL
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={imageUrl}
+                      readOnly
+                      className="flex-1 rounded-md border border-gray-300 px-3 py-2
+                                 text-black bg-gray-50 text-sm"
+                    />
+                    <button
+                      onClick={copyUrl}
+                      className="rounded-md bg-gray-900 px-4 py-2
+                                 text-sm text-white hover:bg-black"
+                    >
+                      {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Action Buttons */}
-            <div className="flex gap-2 pt-2">
               <button
                 onClick={clearAll}
                 className="rounded-md border border-gray-300 px-4 py-2
@@ -136,26 +138,62 @@ export default function Home() {
                 Clear All
               </button>
             </div>
-          </div>
 
-          {/* RIGHT — Preview */}
-          <div className="border rounded-lg bg-gray-50 flex items-center justify-center p-4">
-            {!imageUrl && (
-              <p className="text-sm text-gray-400">
-                Image preview will appear here
-              </p>
-            )}
-
-            {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Uploaded preview"
-                className="max-h-[400px] w-full object-contain rounded-md"
-              />
-            )}
+            {/* RIGHT */}
+            <div className="border rounded-lg bg-gray-50 flex items-center justify-center p-4">
+              {!imageUrl && (
+                <p className="text-sm text-gray-400">
+                  Image preview will appear here
+                </p>
+              )}
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Uploaded preview"
+                  className="max-h-[400px] w-full object-contain rounded-md"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer Section */}
+      <section className="w-full border-t bg-white py-4">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2">
+          <p className="text-sm text-gray-600">
+            Built by{" "}
+            <span className="font-medium text-gray-900">Anmol Sinha</span>
+          </p>
+
+          <div className="flex gap-4 text-sm">
+            <a
+              href="https://www.linkedin.com/in/anmolsinha21"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-blue-600 transition"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/Anmol-345"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 transition"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://anmol-dev.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-black transition"
+            >
+              Portfolio
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

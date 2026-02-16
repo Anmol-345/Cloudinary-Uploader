@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
-body{
-  font:black;
+html, body {
+  height: 100%;
+}
+
+body {
+  font: black;
+  display: flex;
+  flex-direction: column;
+}
+
+body > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
