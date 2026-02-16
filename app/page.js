@@ -46,8 +46,6 @@ export default function Home() {
   };
 
   const clearAll = () => {
-    setCloudName("");
-    setPreset("");
     setImageUrl("");
     setCopied(false);
     setLoading(false);
