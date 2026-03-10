@@ -9,6 +9,7 @@ export default function History() {
   useEffect(() => {
     const stored = localStorage.getItem("cloudinary_history");
     if (stored) {
+      // Show newest first (already in reverse order if pushed at front)
       setImages(JSON.parse(stored));
     }
   }, []);
@@ -26,8 +27,18 @@ export default function History() {
 
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center p-8">
-      <div className="w-full max-w-5xl flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Upload History</h1>
+      <div className="w-full max-w-5xl flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-6">
+        <div className="flex items-center gap-2">
+          <a
+            href="/"
+            className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-center"
+            title="Back to Home"
+            style={{ minWidth: 36 }}
+          >
+            &lt;
+          </a>
+          <h1 className="text-2xl font-semibold text-gray-900">Upload History</h1>
+        </div>
         <button
           onClick={clearHistory}
           className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -46,7 +57,7 @@ export default function History() {
             >
               <img
                 src={url}
-                alt={`Uploaded ${idx}`}
+                alt={`Uploaded ${images.length - 1 - idx}`}
                 className="w-full h-48 object-cover"
               />
               <button

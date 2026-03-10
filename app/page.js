@@ -71,7 +71,7 @@ export default function Home() {
           if (!prev.includes(url)) {
             localStorage.setItem("cloudinary_history", JSON.stringify([url, ...prev].slice(0, 16)));
           }
-        } catch {}
+        } catch { }
       }
     } catch (err) {
       console.error(err);
