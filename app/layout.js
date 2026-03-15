@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Quikinary - Cloudinary Image Uploader",
   description: "A simple and fast image uploader for Cloudinary built with Next.js 13 and Tailwind CSS.",
+  verification: {
+    google: "UrqQlbrKgPXsxDjV-0cleR7W7eoSW7J9v1pmY6iHSQU",
+  },
 };
 
 export default function RootLayout({ children }) {
